@@ -1,7 +1,7 @@
 Output of WorldFlora R Package 
 http://www.worldfloraonline.org/
 
-*Pinus mugo Turra* 
+*Pinus mugo* Turra
 ```
 > WFO.match("Pinus mugo Turra", WFO.data=WFO.data)
 Fuzzy matches for Pinus mugo Turra were only found for first 2 terms
@@ -92,7 +92,7 @@ Best fuzzy matches for  Pinus mugo Turra were:  Pinus mugo, Pinus mughus
 1
 ```
 
-*Pinus mugo Smith*
+*Pinus mugo* Smith
 
 
 ```
@@ -128,7 +128,7 @@ Best fuzzy matches for  Pinus mugo Smith were:  Pinus mugo
 
 ```
 
-*Pinus muco Turra* 
+*Pinus muco* Turra 
 ```
 > WFO.match("Pinus muco Turra", WFO.data=WFO.data)
 Fuzzy matches for Pinus muco Turra were only found for first 2 terms
@@ -160,7 +160,7 @@ With Fuzzy.two, reduced matches to those of 2 words only
 1                      
 ```
 
-*Pino mugo Turra*
+*Pino mugo* Turra
 
 ```
 > WFO.match("Pino mugo Turra", WFO.data=WFO.data)
@@ -187,7 +187,7 @@ Too many (30029) fuzzy matches for Pino mugo Turra, including Blumea glutinosa
 
 ```
 
-*Pinus basso Turra*
+*Pinus basso* Turra
 
 ```
 > WFO.match("Pinus basso Turra", WFO.data=WFO.data)
