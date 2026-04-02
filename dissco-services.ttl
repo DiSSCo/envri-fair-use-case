@@ -1,0 +1,220 @@
+@prefix schema: <http://schema.org/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix hydra: <http://www.w3.org/ns/hydra/core#> .
+@prefix epos: <https://www.epos-eu.org/epos-dcat-ap#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix locn: <http://www.w3.org/ns/locn#> .
+@prefix gsp: <http://www.opengis.net/ont/geosparql#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+# =============================================================================
+# ORGANIZATION
+# =============================================================================
+
+# Naturalis is the entity currently maintaining
+# core DiSSCo infrastructure
+
+<https://ror.org/0566bfb96> a schema:Organization ;
+    schema:identifier [
+        a schema:PropertyValue ;
+        schema:propertyID "ROR" ;
+        schema:value "0566bfb96" ;
+    ] ;
+    schema:legalName "Distributed System of Scientific Collections (DiSSCo)" ;
+    schema:address [
+        a schema:PostalAddress ;
+        schema:streetAddress "Darwinweg 2" ;
+        schema:addressLocality "Leiden" ;
+        schema:postalCode "2333 CR" ;
+        schema:addressCountry "Netherlands" ;
+    ] ;
+    schema:logo "https://www.dissco.eu/wp-content/uploads/dissco-logo-web-white.svg"^^xsd:anyURI ;
+    schema:url "https://www.dissco.eu"^^xsd:anyURI ;
+    schema:email "info@dissco.eu" ;
+    # leiCode recommended by SHACL; DiSSCo or Naturalis does not hold a LEI
+    schema:leiCode "N/A" ;
+.
+
+# =============================================================================
+# CONTACT POINT
+# =============================================================================
+
+<https://dissco.eu/contact/> a schema:ContactPoint ;
+    schema:email "info@dissco.eu" ;
+    schema:name "DiSSCo Coordination Office" ;
+    schema:availableLanguage "en" ;
+    schema:contactType "manager" ;
+.
+
+# =============================================================================
+# DATASET
+# Represents the aggregate DiSSCo Digital Specimen collection
+# 
+# =============================================================================
+
+<https://disscover.dissco.eu/search> a dcat:Dataset ;
+    dct:identifier "dissco-digital-specimens" ;
+    dct:title "DiSSCo Digital Specimen Collection"^^xsd:string ;
+    dct:description "Digital representations of natural science collection specimens managed by the Distributed System of Scientific Collections (DiSSCo) infrastructure. Records are exposed as FAIR Digital Objects (FDOs) and encompass specimens held by European natural history collections. Annotations and curatorial enrichments contributed via the DiSSCover portal."^^xsd:string ;
+
+    dcat:keyword
+        "biodiversity" ,
+        "natural history collections" ,
+        "natural science collections" ,
+        "digital specimens" ,
+        "FAIR Digital Objects" ,
+        "taxonomy" ,
+        "annotations" ,
+        "openDS" ;
+
+    # EuroSciVoc: Biological sciences / Biodiversity
+    dcat:theme "http://data.europa.eu/8mn/euroscivoc/9673e38a-7628-4ab0-a0e2-1f1ef7e95dc8"^^xsd:anyURI ;
+
+    # FIX (warning 4): ENVRI thematic category as xsd:anyURI literal
+    # so the SHACL sh:OrConstraint on dcat:theme is satisfied
+    dcat:theme "category:ENVRI_conc"^^xsd:anyURI ;
+
+    # Variables measured
+    #schema:variableMeasured "https://dwc.tdwg.org/list/#dwc_MaterialEntity" ;
+
+    dct:publisher <https://ror.org/0566bfb96> ;
+    dcat:contactPoint <https://dissco.eu/contact/> ;
+
+    # Very rough bounding box for Europe
+    dct:spatial [
+        a dct:Location ;
+        locn:geometry "POLYGON((-25 34, -25 72, 45 72, 45 34, -25 34))"^^gsp:wktLiteral ;
+    ] ;
+
+    # Temporal coverage not applicable: DiSSCo ingests datasets with varying
+    # temporal coverage continuously
+    #dct:temporal [
+    #    a dct:PeriodOfTime ;
+    #    schema:startDate "1600-01-01T00:00:00Z"^^xsd:dateTime ;
+    #] ;
+
+    dct:type "http://purl.org/dc/dcmitype/Collection"^^xsd:anyURI ;
+    dct:accrualPeriodicity "http://purl.org/cld/freq/continuous"^^xsd:anyURI ;
+
+    dct:created "2021-01-01T00:00:00Z"^^xsd:dateTime ;
+    dct:modified "2025-01-01T00:00:00Z"^^xsd:dateTime ;
+    owl:versionInfo "1.0.0" ;
+
+    dct:license "http://creativecommons.org/licenses/by/4.0/"^^xsd:anyURI ;
+
+    # One distribution per registered API endpoint
+    dcat:distribution
+        <https://disscover.dissco.eu/digital-specimen/v1> ,
+        <https://disscover.dissco.eu/digital-media/v1> ;
+.
+
+# =============================================================================
+# DISTRIBUTIONS
+# One per registered API endpoint. Subject URI = the API endpoint URL.
+# FIX (violation 1+A): duplicate blocks removed; single canonical block per
+# distribution. dcat:accessURL is an xsd:anyURI literal pointing to the
+# versioned API path (satisfies SHACL sh:OrConstraint).
+# dct:conformsTo points to the shared epos:WebService.
+# =============================================================================
+
+<https://disscover.dissco.eu/digital-specimen/v1> a dcat:Distribution ;
+    dct:identifier "getSpecimen"^^xsd:string ;
+    dct:title "Get paginated digital specimen"^^xsd:string ;
+    dct:description "Paginated retrieval of Digital Specimen records from the DiSSCo infrastructure. Records conform to the openDS specification and are expressed as FAIR Digital Objects." ;
+    dct:type "http://publications.europa.eu/resource/authority/distribution-type/WEB_SERVICE"^^xsd:anyURI ;
+    dct:format "http://publications.europa.eu/resource/authority/file-type/JSON"^^xsd:anyURI ;
+    dct:license "http://creativecommons.org/licenses/by/4.0/"^^xsd:anyURI ;
+    dcat:accessURL "https://disscover.dissco.eu/api/digital-specimen/v1"^^xsd:anyURI ;
+    dct:conformsTo <https://disscover.dissco.eu/api> ;
+.
+
+<https://disscover.dissco.eu/digital-media/v1> a dcat:Distribution ;
+    dct:identifier "getDigitalMediaObjects"^^xsd:string ;
+    dct:title "DiSSCo - Get paginated digital media"^^xsd:string ;
+    dct:description "Paginated retrieval of Digital Media objects linked to Digital Specimens in the DiSSCo infrastructure. Records conform to the openDS specification and are expressed as FAIR Digital Objects." ;
+    dct:type "http://publications.europa.eu/resource/authority/distribution-type/WEB_SERVICE"^^xsd:anyURI ;
+    dct:format "http://publications.europa.eu/resource/authority/file-type/JSON"^^xsd:anyURI ;
+    dct:license "http://creativecommons.org/licenses/by/4.0/"^^xsd:anyURI ;
+    dcat:accessURL "https://disscover.dissco.eu/api/digital-media/v1"^^xsd:anyURI ;
+    dct:conformsTo <https://disscover.dissco.eu/api> ;
+.
+
+# =============================================================================
+# WEB SERVICE (epos:WebService)
+# =============================================================================
+
+<https://disscover.dissco.eu/api> a epos:WebService ;
+    schema:identifier "dissco-api"^^xsd:string ;
+    schema:name "DiSSCover REST API" ;
+    schema:description "API providing search and retrieval of Digital Specimen records and related resources (digital media, annotations, agents, etc.). All endpoints conform to the openDS specification and are expressed as FAIR Digital Objects."^^xsd:string ;
+
+    dcat:contactPoint <https://dissco.eu/contact/> ;
+    dcat:theme "http://data.europa.eu/8mn/euroscivoc/9673e38a-7628-4ab0-a0e2-1f1ef7e95dc8"^^xsd:anyURI ;
+
+    hydra:entrypoint "https://disscover.dissco.eu/api/docs/swagger-ui/index.html"^^xsd:anyURI ;
+
+    schema:provider <https://ror.org/0566bfb96> ;
+    schema:datePublished "2022-01-01T00:00:00Z"^^xsd:dateTime ;
+    schema:dateModified  "2025-01-01T00:00:00Z"^^xsd:dateTime ;
+
+    schema:keywords
+        "biodiversity" ,
+        "digital specimens" ,
+        "natural history collections" ,
+        "openDS" ,
+        "FAIR Digital Objects" ,
+        "annotations" ;
+
+    dct:license "http://creativecommons.org/licenses/by/4.0/"^^xsd:anyURI ;
+
+    # FIX (violation B): absolute URIs matching the real API endpoint paths;
+    # these same URIs are the subjects of the hydra:Operation blocks below
+    hydra:supportedOperation
+        <https://disscover.dissco.eu/api/digital-specimen/v1> ,
+        <https://disscover.dissco.eu/api/digital-media/v1> ;
+
+    dct:conformsTo <https://disscover.dissco.eu/api/docs/swagger-ui/index.html> ;
+.
+
+# =============================================================================
+# API DOCUMENTATION
+# =============================================================================
+
+<https://disscover.dissco.eu/api/docs/swagger-ui/index.html> a hydra:ApiDocumentation ;
+    hydra:title "DiSSCo OpenAPI Documentation" ;
+    hydra:description "OpenAPI 3.0 specification for the DiSSCo API. Full parameter definitions at https://disscover.dissco.eu/api/docs/api-docs"^^xsd:string ;
+    hydra:entrypoint "https://disscover.dissco.eu/api/docs/swagger-ui/index.html"^^xsd:anyURI ;
+.
+
+# =============================================================================
+# OPERATIONS
+# URI = the actual API endpoint URL (single source of truth).
+# operationId from the OpenAPI spec is carried as schema:identifier.
+# FIX (warning 2+5): hydra:property with a minimal IriTemplate satisfies the
+# SHACL recommendation; parameters are intentionally omitted here — the
+# OpenAPI spec at /api/docs/api-docs is the authoritative source for those.
+# =============================================================================
+
+<https://disscover.dissco.eu/api/digital-specimen/v1> a hydra:Operation ;
+    schema:identifier "getSpecimen" ;
+    rdfs:label "Get paginated digital specimen" ;
+    hydra:method "GET"^^xsd:string ;
+    hydra:returns "application/json" ;
+    hydra:property [
+        a hydra:IriTemplate ;
+        hydra:template "https://disscover.dissco.eu/api/digital-specimen/v1{?pageNumber,pageSize}"^^xsd:string ;
+    ] ;
+.
+
+<https://disscover.dissco.eu/api/digital-media/v1> a hydra:Operation ;
+    schema:identifier "getDigitalMediaObjects" ;
+    rdfs:label "Get paginated digital media" ;
+    hydra:method "GET"^^xsd:string ;
+    hydra:returns "application/json" ;
+    hydra:property [
+        a hydra:IriTemplate ;
+        hydra:template "https://disscover.dissco.eu/api/digital-media/v1{?pageNumber,pageSize}"^^xsd:string ;
+    ] ;
+.
